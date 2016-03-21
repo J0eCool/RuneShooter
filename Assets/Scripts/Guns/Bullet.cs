@@ -12,10 +12,12 @@ public class Bullet : JComponent {
 	private float _distTraveled = 0.0f;
 	private bool _didCollide = false;
 
-	public void Init(Vector3 pos, Vector3 dir) {
+	public void Init(ShotData shot, Vector3 pos, Vector3 dir) {
 		transform.position = pos;
 		_dir = dir.normalized;
 		MathUtil.LookAt2D(transform, pos + dir);
+
+		_speed *= shot.projectileSpeed;
 	}
 
 	protected override void OnFixedUpdate() {
