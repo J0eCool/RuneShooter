@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 
 [System.Serializable]
 public class ShotData {
@@ -14,15 +15,11 @@ public class ShotData {
 	public float cyclicFrequency = 1.0f;
 
 	public ShotData Copy() {
-		ShotData shot = new ShotData();
-		shot.attackSpeed = attackSpeed;
-		shot.numBullets = numBullets;
-		shot.projectileSpeed = projectileSpeed;
-		shot.baseSpread = baseSpread;
-		shot.perBulletSpread = perBulletSpread;
-		shot.randomSpread = randomSpread;
-		shot.cyclicSpread = cyclicSpread;
-		shot.cyclicFrequency = cyclicFrequency;
-		return shot;
+		ShotData ret = new ShotData();
+		System.Type t = typeof(ShotData);
+		foreach (FieldInfo field in t.GetFields()) {
+			field.SetValue(ret, field.GetValue(this));
+		}
+		return ret;
 	}
 }
