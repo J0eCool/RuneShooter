@@ -7,17 +7,20 @@ public class PlayerMovement : JComponent {
 	[SerializeField] private float accelTime = 0.2f;
 	[SerializeField] private float dampingFactor = 2.0f;
 
-	private Vector3 velocity;
+	new private Rigidbody2D rigidbody;
+
+	protected override void OnStart() {
+		rigidbody = GetComponent<Rigidbody2D>();
+	}
 
 	protected override void OnFixedUpdate() {
 		float dT = Time.fixedDeltaTime;
 		float dX = Input.GetAxis("Horizontal");
 		float dY = Input.GetAxis("Vertical");
-		float vX = updateDirVel(velocity.x, dX, dT);
-		float vY = updateDirVel(velocity.y, dY, dT);
+		float vX = updateDirVel(rigidbody.velocity.x, dX, dT);
+		float vY = updateDirVel(rigidbody.velocity.y, dY, dT);
 
-		velocity = new Vector3(vX, vY);
-		transform.position += dT * velocity;
+		rigidbody.velocity = new Vector3(vX, vY);
 		MathUtil.LookAt2D(transform, MouseManager.Instance.WorldPos);
 	}
 
