@@ -9,16 +9,20 @@ public class RandomlySizedDoor : JComponent {
 	[SerializeField] private float maxDoorSize = 3.5f;
 
 	public void Init(float totalWallSize, bool isVertical, bool isDoor) {
+		if (isVertical) {
+			// Reduce vertical wall size to make room borders fit together more snugly
+			totalWallSize -= 1.0f;
+		}
 		if (!isDoor) {
 			spawnWall(isVertical, 0.0f, totalWallSize);
 			return;
 		}
 
-		float doorWidth = normalizedRandom(minDoorSize, maxDoorSize);
+		float doorWidth = RandomUtil.Normalized(minDoorSize, maxDoorSize);
 		float halfTotalSize = totalWallSize / 2.0f;
 		float halfDoorSize = doorWidth / 2.0f;
 		float centerBound = halfTotalSize - minWallSize - halfDoorSize;
-		float doorCenter = normalizedRandom(-centerBound, centerBound);
+		float doorCenter = RandomUtil.Normalized(-centerBound, centerBound);
 
 		float doorLeft = doorCenter - halfDoorSize;
 		float leftSize = halfTotalSize + doorLeft;
@@ -31,14 +35,8 @@ public class RandomlySizedDoor : JComponent {
 		spawnWall(isVertical, rightPos, rightSize);
 	}
 
-	private float normalizedRandom(float lo, float hi) {
-		float diff = hi - lo;
-		float randDelta = Random.Range(0.0f, diff) / 2.0f;
-		return Random.Range(lo + randDelta, hi - randDelta);
-	}
-
 	private void spawnWall(bool isVertical, float offset, float size) {
-		GameObject wall = GameObject.Instantiate(wallPrefab);
+		GameObject wall = Instantiate(wallPrefab);
 		wall.transform.parent = transform;
 
 		Vector3 scale = wall.transform.localScale;
