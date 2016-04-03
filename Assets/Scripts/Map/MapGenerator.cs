@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class MapGenerator : JComponent {
+	[SerializeField] private string startRoomName = "Start";
 	[SerializeField] private GameObject wallPrefab;
 	[SerializeField] private float roomWidth = 14.333f;
 	[SerializeField] private float roomHeight = 10.0f;
@@ -25,7 +26,9 @@ public class MapGenerator : JComponent {
 
 		int x = Random.Range(0, width);
 		int y = Random.Range(0, height);
-		rooms[x, y] = new Room();
+		Room startRoom = new Room();
+		rooms[x, y] = startRoom;
+		startRoom.isStartRoom = true;
 		startOffset = transform.position - offsetForRoom(x, y);
 
 		int count = Random.Range(1, width) + Random.Range(1, height) + width * height / 4;
@@ -73,15 +76,31 @@ public class MapGenerator : JComponent {
 		Object[] roomPrefabs = Resources.LoadAll("Rooms");
 		for (int i = 0; i < width; ++i) {
 			for (int j = 0; j < height; ++j) {
-				if (rooms[i, j] != null) {
-					GameObject prefab = RandomUtil.Element(roomPrefabs) as GameObject;
-					GameObject room = Instantiate(prefab);
-					room.name += string.Format("{0} ({1}, {2})", prefab.name, i, j);
-					room.transform.position = positionForRoom(i, j);
-					room.transform.parent = roomFolder;
+				Room room = rooms[i, j];
+				if (room != null) {
+					GameObject prefab;
+					if (room.isStartRoom) {
+						prefab = roomPrefabWithName(startRoomName, roomPrefabs);
+					} else {
+						prefab = RandomUtil.Element(roomPrefabs) as GameObject;
+					}
+
+					GameObject roomObject = Instantiate(prefab);
+					roomObject.name = string.Format("({1}, {2}) {0}", prefab.name, i, j);
+					roomObject.transform.position = positionForRoom(i, j);
+					roomObject.transform.parent = roomFolder;
 				}
 			}
 		}
+	}
+
+	private GameObject roomPrefabWithName(string name, Object[] prefabs) {
+		foreach (GameObject obj in prefabs) {
+			if (obj.name == name) {
+				return obj;
+			}
+		}
+		return null;
 	}
 
 	private void spawnWalls() {
