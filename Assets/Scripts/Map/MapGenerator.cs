@@ -2,13 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-class Room {
-	public bool doorToEast = false;
-	public bool doorToNorth = false;
-}
-
 public class MapGenerator : JComponent {
-	[SerializeField] private GameObject roomPrefab;
 	[SerializeField] private GameObject wallPrefab;
 	[SerializeField] private float roomWidth = 14.333f;
 	[SerializeField] private float roomHeight = 10.0f;
@@ -76,11 +70,13 @@ public class MapGenerator : JComponent {
 	private void spawnRooms() {
 		Transform roomFolder = new GameObject("Rooms").transform;
 		roomFolder.parent = transform;
+		Object[] roomPrefabs = Resources.LoadAll("Rooms");
 		for (int i = 0; i < width; ++i) {
 			for (int j = 0; j < height; ++j) {
 				if (rooms[i, j] != null) {
-					GameObject room = Instantiate(roomPrefab);
-					room.name = string.Format("Room ({0}, {1})", i, j);
+					GameObject prefab = RandomUtil.Element(roomPrefabs) as GameObject;
+					GameObject room = Instantiate(prefab);
+					room.name += string.Format("{0} ({1}, {2})", prefab.name, i, j);
 					room.transform.position = positionForRoom(i, j);
 					room.transform.parent = roomFolder;
 				}

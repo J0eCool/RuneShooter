@@ -16,4 +16,9 @@ public class RandomUtil {
 	public static int Sign() {
 		return Bool() ? 1 : -1;
 	}
+
+	public static T Element<T>(T[] list) {
+		int idx = Random.Range(0, list.Length);
+		return list[idx];
+	}
 }
