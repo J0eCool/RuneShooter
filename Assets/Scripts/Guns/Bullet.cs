@@ -30,7 +30,7 @@ public class Bullet : JComponent {
 		}
 	}
 
-	void OnTriggerEnter(Collider other) {
+	void OnTriggerEnter2D(Collider2D other) {
 		Health health = other.GetComponent<Health>();
 		if (health && health.IsEnemy != _isEnemy) {
 			health.TakeDamage(_damage);
