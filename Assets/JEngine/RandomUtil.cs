@@ -17,8 +17,13 @@ public class RandomUtil {
 		return Bool() ? 1 : -1;
 	}
 
-	public static T Element<T>(T[] list) {
-		int idx = Random.Range(0, list.Length);
+	public static T Element<T>(T[] array) {
+		int idx = Random.Range(0, array.Length);
+		return array[idx];
+	}
+
+	public static T Element<T>(List<T> list) {
+		int idx = Random.Range(0, list.Count);
 		return list[idx];
 	}
 }

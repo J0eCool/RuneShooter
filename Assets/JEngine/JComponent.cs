@@ -12,14 +12,14 @@ public class JComponent : MonoBehaviour {
 			component.OnRemove();
 		}
 
-		GameObject.Destroy(gameObject);
+		Destroy(gameObject);
 	}
 	public static void Remove(GameObject obj) {
 		JComponent component = obj.GetComponent<JComponent>();
 		if (component) {
 			component.Remove();
 		} else {
-			GameObject.Destroy(obj);
+			Destroy(obj);
 		}
 	}
 

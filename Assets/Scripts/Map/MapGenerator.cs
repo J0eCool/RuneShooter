@@ -20,6 +20,7 @@ public class MapGenerator : JComponent {
 	}
 
 	private void generateRooms() {
+		// Generate room layout via random walk
 		width = Random.Range(6, 8);
 		height = Random.Range(4, 6);
 		rooms = new Room[width, height];
@@ -73,14 +74,17 @@ public class MapGenerator : JComponent {
 	private void spawnRooms() {
 		Transform roomFolder = new GameObject("Rooms").transform;
 		roomFolder.parent = transform;
-		Object[] roomPrefabs = Resources.LoadAll("Rooms");
+		var roomPrefabs = new List<Object>(Resources.LoadAll("Rooms"));
+		GameObject startPrefab = roomPrefabWithName(startRoomName, roomPrefabs);
+		roomPrefabs.Remove(startPrefab);
+
 		for (int i = 0; i < width; ++i) {
 			for (int j = 0; j < height; ++j) {
 				Room room = rooms[i, j];
 				if (room != null) {
 					GameObject prefab;
 					if (room.isStartRoom) {
-						prefab = roomPrefabWithName(startRoomName, roomPrefabs);
+						prefab = startPrefab;
 					} else {
 						prefab = RandomUtil.Element(roomPrefabs) as GameObject;
 					}
@@ -89,12 +93,17 @@ public class MapGenerator : JComponent {
 					roomObject.name = string.Format("({1}, {2}) {0}", prefab.name, i, j);
 					roomObject.transform.position = positionForRoom(i, j);
 					roomObject.transform.parent = roomFolder;
+
+					var roomAware = roomObject.GetComponentsInChildren<RoomAwareComponent>();
+					foreach (RoomAwareComponent aware in roomAware) {
+						aware.SetRoom(room);
+					}
 				}
 			}
 		}
 	}
 
-	private GameObject roomPrefabWithName(string name, Object[] prefabs) {
+	private GameObject roomPrefabWithName(string name, List<Object> prefabs) {
 		foreach (GameObject obj in prefabs) {
 			if (obj.name == name) {
 				return obj;

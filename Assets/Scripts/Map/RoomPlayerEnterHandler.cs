@@ -2,11 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class CenterCameraOnPlayerEnter : JComponent {
+public class RoomPlayerEnterHandler : RoomAwareComponent {
 	void OnTriggerEnter2D(Collider2D collider) {
 		if (collider.gameObject == PlayerManager.Instance.Player) {
-			centerCamera();
+			enterRoom();
 		}
+	}
+
+	private void enterRoom() {
+		RoomManager.Instance.SetActiveRoom(room);
+		centerCamera();
 	}
 
 	private void centerCamera() {

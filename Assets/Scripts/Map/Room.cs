@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-class Room {
+public class Room {
 	public bool doorToEast = false;
 	public bool doorToNorth = false;
 	public bool isStartRoom = false;
