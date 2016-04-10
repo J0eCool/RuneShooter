@@ -34,6 +34,8 @@ public class Health : JComponent, HasQuantity {
 			return;
 		}
 
+		health.OnUpdate(Time.deltaTime);
+
 		if (damageTimer > 0.0f) {
 			damageTimer -= Time.deltaTime;
 			flashTimer -= Time.deltaTime;

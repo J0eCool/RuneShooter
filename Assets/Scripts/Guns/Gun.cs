@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[System.Serializable]
 public class Gun {
 	public GunData gunData = null;
 	public List<GunSupportData> supports = new List<GunSupportData>();
@@ -9,9 +10,13 @@ public class Gun {
 	private float shotTimer = 0.0f;
 	private float shotNumPartial = 0.0f;
 
-	public void OnUpdate(bool isShootPressed, Vector3 position) {
+	public void OnUpdate(bool isShootPressed, Vector3 position, LimitedQuantity mana) {
 		if (shotTimer <= 0.0f && isShootPressed) {
-			shoot(position);
+			int manaCost = (int)getShotData().manaCost;
+			if (mana.Current >= manaCost) {
+				mana.Add(-manaCost);
+				shoot(position);
+			}
 		}
 		updateShotTimer();
 	}

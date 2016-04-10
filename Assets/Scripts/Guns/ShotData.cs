@@ -5,6 +5,7 @@ using System.Reflection;
 
 [System.Serializable]
 public class ShotData {
+	public float manaCost = 0.0f;
 	public float attackSpeed = 1.4f;
 	public float numBullets = 1.0f;
 	public float projectileSpeed = 1.0f;

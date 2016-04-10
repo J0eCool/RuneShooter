@@ -1,23 +1,32 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
 public class QuantityBar : JComponent {
 	[SerializeField] private GameObject target;
 	[SerializeField] private Transform barImage;
+	[SerializeField] private Text text = null;
+	[SerializeField] private bool forceLeftAlign = true;
 
 	protected LimitedQuantity quantity;
 	private float baseWidth;
+	private string baseText;
 
 	protected override void OnStart() {
-		var targetComponent = target.GetComponent<HasQuantity>();
-		quantity = targetComponent.GetQuantity();
+		var targetComponent = target ? target.GetComponent<HasQuantity>() : null;
+		quantity = targetComponent != null ? targetComponent.GetQuantity() : null;
 
 		baseWidth = barImage.localScale.x;
+		baseText = text ? text.text : null;
 	}
 
 	protected override void OnUpdate() {
-		float pct = (quantity != null) ? quantity.Fraction : 0.0f;
+		if (quantity == null) {
+			return;
+		}
+
+		float pct = quantity.Fraction;
 		pct = Mathf.Clamp01(pct);
 		float width = baseWidth * pct;
 
@@ -25,8 +34,14 @@ public class QuantityBar : JComponent {
 		scale.x = width;
 		barImage.localScale = scale;
 
-		var pos = barImage.localPosition;
-		pos.x = (width - baseWidth) / 2.0f;
-		barImage.localPosition = pos;
+		if (forceLeftAlign) {
+			var pos = barImage.localPosition;
+			pos.x = (width - baseWidth) / 2.0f;
+			barImage.localPosition = pos;
+		}
+
+		if (text) {
+			text.text = string.Format(baseText, quantity.Current, quantity.Max);
+		}
 	}
 }

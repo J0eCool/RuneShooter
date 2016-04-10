@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class GunSupportData : ScriptableObject {
+	public float manaMultiplier = 1.0f;
 	public float increasedAttackSpeed = 0.0f;
 	public float increasedProjectileSpeed = 0.0f;
 	public float additionalProjectiles = 0.0f;
@@ -11,6 +12,8 @@ public class GunSupportData : ScriptableObject {
 	public void Modify(ShotData shot) {
 		increase(ref shot.attackSpeed, increasedAttackSpeed);
 		increase(ref shot.projectileSpeed, increasedProjectileSpeed);
+
+		shot.manaCost *= manaMultiplier;
 
 		shot.numBullets += additionalProjectiles;
 	}
