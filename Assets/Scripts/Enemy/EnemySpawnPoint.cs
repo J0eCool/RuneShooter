@@ -12,6 +12,11 @@ public class EnemySpawnPoint : RoomAwareComponent, RoomChangeResponder {
 		RoomManager.Instance.Subscribe(this);
 	}
 
+	void OnDrawGizmos() {
+		Gizmos.color = Color.red;
+		Gizmos.DrawWireSphere(transform.position, 0.4f);
+	}
+
 	public void DidSetActiveRoom(Room activeRoom) {
 		bool movedToCurrentRoom = activeRoom == room;
 		if (movedToCurrentRoom && !didSpawn) {

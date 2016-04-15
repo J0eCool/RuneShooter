@@ -9,6 +9,13 @@ public class RoomPlayerEnterHandler : RoomAwareComponent {
 		}
 	}
 
+	void OnDrawGizmos() {
+		BoxCollider2D boxCollider = GetComponent<BoxCollider2D>();
+		Vector2 size = VectorUtil.Mult(transform.lossyScale, boxCollider.size);
+		Gizmos.color = Color.yellow;
+		Gizmos.DrawWireCube(transform.position, size);
+	}
+
 	private void enterRoom() {
 		RoomManager.Instance.SetActiveRoom(room);
 		centerCamera();
