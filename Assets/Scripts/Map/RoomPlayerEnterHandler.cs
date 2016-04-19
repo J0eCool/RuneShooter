@@ -2,11 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 
+interface RandomPositionGizmoDrawer {
+	void DrawRandomGizmos();
+}
+
 public class RoomPlayerEnterHandler : RoomAwareComponent {
+	[SerializeField] private bool drawChildRandomPositions = false;
+
 	void OnTriggerEnter2D(Collider2D collider) {
 		if (collider.gameObject == PlayerManager.Instance.Player) {
 			enterRoom();
 		}
+	}
+
+	private void enterRoom() {
+		RoomManager.Instance.SetActiveRoom(room);
 	}
 
 	void OnDrawGizmos() {
@@ -14,17 +24,13 @@ public class RoomPlayerEnterHandler : RoomAwareComponent {
 		Vector2 size = VectorUtil.Mult(transform.lossyScale, boxCollider.size);
 		Gizmos.color = Color.yellow;
 		Gizmos.DrawWireCube(transform.position, size);
-	}
 
-	private void enterRoom() {
-		RoomManager.Instance.SetActiveRoom(room);
-		centerCamera();
-	}
-
-	private void centerCamera() {
-		Transform cameraTransform = Camera.main.transform;
-		Vector3 pos = transform.position;
-		pos.z = cameraTransform.position.z;
-		cameraTransform.position = pos;
+		if (drawChildRandomPositions) {
+			Gizmos.color = Color.cyan;
+			var drawers = transform.parent.GetComponentsInChildren<RandomPositionGizmoDrawer>();
+			foreach (var drawer in drawers) {
+				drawer.DrawRandomGizmos();
+			}
+		}
 	}
 }

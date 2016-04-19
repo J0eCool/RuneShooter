@@ -12,6 +12,8 @@ public class RandomlySizedDoor : JComponent {
 		if (isVertical) {
 			// Reduce vertical wall size to make room borders fit together more snugly
 			totalWallSize -= 1.0f;
+		} else {
+			totalWallSize += 1.0f;
 		}
 		if (!isDoor) {
 			spawnWall(isVertical, 0.0f, totalWallSize);
