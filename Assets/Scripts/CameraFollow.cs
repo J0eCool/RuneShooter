@@ -13,7 +13,7 @@ public class CameraFollow : JComponent {
 		Vector2 targetPos = new Vector2(target.position.x, target.position.y) + mouseDelta;
 		Vector2 delta = targetPos - pos2d;
 		Vector2 toMove = delta * Time.fixedDeltaTime * correctionCoefficient;
-		if (toMove.sqrMagnitude >= delta.sqrMagnitude) {
+		if (toMove.sqrMagnitude >= delta.sqrMagnitude || correctionCoefficient <= 0.0f) {
 			transform.position = new Vector3(targetPos.x, targetPos.y, transform.position.z);
 		} else {
 			transform.position += (Vector3)toMove;

@@ -6,21 +6,32 @@ public class PlayerMovement : JComponent {
 	[SerializeField] private float moveSpeed = 1.0f;
 	[SerializeField] private float accelTime = 0.2f;
 	[SerializeField] private float dampingFactor = 2.0f;
+	[SerializeField] private float decelerateRange = 0.5f;
 
 	new private Rigidbody2D rigidbody;
 
+	private Vector3 moveTarget;
+
 	protected override void OnStart() {
 		rigidbody = GetComponent<Rigidbody2D>();
+		moveTarget = transform.position;
 	}
 
 	protected override void OnFixedUpdate() {
 		float dT = Time.fixedDeltaTime;
-		float dX = Input.GetAxis("Horizontal");
-		float dY = Input.GetAxis("Vertical");
-		float vX = updateDirVel(rigidbody.velocity.x, dX, dT);
-		float vY = updateDirVel(rigidbody.velocity.y, dY, dT);
 
-		rigidbody.velocity = new Vector3(vX, vY);
+		if (Input.GetButton("Click")) {
+			moveTarget = MouseManager.Instance.WorldPos;
+		}
+
+		Vector3 delta = moveTarget - transform.position;
+		delta.z = 0.0f;
+		Vector3 dir = delta.normalized;
+		if (delta.sqrMagnitude < decelerateRange * decelerateRange) {
+			dir = Vector3.zero;
+		}
+
+		rigidbody.velocity = dir * moveSpeed;
 		MathUtil.LookAt2D(transform, MouseManager.Instance.WorldPos);
 	}
 
