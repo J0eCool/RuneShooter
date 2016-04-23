@@ -10,12 +10,12 @@ public class Gun {
 	private float shotTimer = 0.0f;
 	private float shotNumPartial = 0.0f;
 
-	public void OnUpdate(bool isShootPressed, Vector3 position, LimitedQuantity mana) {
-		if (shotTimer <= 0.0f && isShootPressed) {
+	public void OnUpdate(Transform target, Vector3 position, LimitedQuantity mana) {
+		if (shotTimer <= 0.0f && target) {
 			int manaCost = (int)getShotData().manaCost;
 			if (mana.Current >= manaCost) {
 				mana.Add(-manaCost);
-				shoot(position);
+				shoot(target, position);
 			}
 		}
 		updateShotTimer();
@@ -36,11 +36,11 @@ public class Gun {
 		return shot;
 	}
 
-	private void shoot(Vector3 pos) {
+	private void shoot(Transform target, Vector3 pos) {
 		ShotData shot = getShotData();
 
-		Vector3 mousePos = MouseManager.Instance.WorldPos;
-		Vector3 aimDir = (mousePos - pos).normalized;
+		Vector3 targetPos = target.position;
+		Vector3 aimDir = (targetPos - pos).normalized;
 		float aimAngle = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg;
 
 		float toShootFloat = shotNumPartial + shot.numBullets;

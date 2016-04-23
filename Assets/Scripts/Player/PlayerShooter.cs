@@ -6,6 +6,8 @@ public class PlayerShooter : JComponent, HasQuantity {
 	[SerializeField] private LimitedQuantity mana;
 	[SerializeField] private Gun gun;
 
+	private Transform target;
+
 	protected override void OnStart() {
 		mana.OnStart();
 	}
@@ -13,10 +15,14 @@ public class PlayerShooter : JComponent, HasQuantity {
 	protected override void OnUpdate() {
 		mana.OnUpdate(Time.deltaTime);
 
-		gun.OnUpdate(Input.GetButton("Fire"), transform.position, mana);
+		gun.OnUpdate(target, transform.position, mana);
 	}
 
 	public LimitedQuantity GetQuantity() {
 		return mana;
+	}
+
+	public void SetTarget(Transform target) {
+		this.target = target;
 	}
 }

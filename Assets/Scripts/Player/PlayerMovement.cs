@@ -8,12 +8,13 @@ public class PlayerMovement : JComponent {
 	[SerializeField] private float dampingFactor = 2.0f;
 	[SerializeField] private float decelerateRange = 0.5f;
 
-	new private Rigidbody2D rigidbody;
+	[StartComponent] new private Rigidbody2D rigidbody;
+	[StartChildComponent] private PlayerShooter shooter;
 
 	private Vector3 moveTarget;
+	private Transform shotTarget;
 
 	protected override void OnStart() {
-		rigidbody = GetComponent<Rigidbody2D>();
 		moveTarget = transform.position;
 	}
 
@@ -21,7 +22,15 @@ public class PlayerMovement : JComponent {
 		float dT = Time.fixedDeltaTime;
 
 		if (Input.GetButton("Click")) {
-			moveTarget = MouseManager.Instance.WorldPos;
+			Vector3 mousePos = MouseManager.Instance.WorldPos;
+			int enemyLayer = 1 << LayerMask.NameToLayer("Enemy");
+			var hit = Physics2D.Raycast(mousePos, Vector2.zero, 0.01f, enemyLayer);
+			if (hit) {
+				shotTarget = hit.transform;
+				shooter.SetTarget(hit.transform);
+			} else {
+				moveTarget = mousePos;
+			}
 		}
 
 		Vector3 delta = moveTarget - transform.position;
@@ -32,7 +41,8 @@ public class PlayerMovement : JComponent {
 		}
 
 		rigidbody.velocity = dir * moveSpeed;
-		MathUtil.LookAt2D(transform, MouseManager.Instance.WorldPos);
+		Vector3 lookAtPos = shotTarget != null ? shotTarget.position : (Vector3)MouseManager.Instance.WorldPos;
+		MathUtil.LookAt2D(transform, lookAtPos);
 	}
 
 	float updateDirVel(float cur, float input, float dT) {
