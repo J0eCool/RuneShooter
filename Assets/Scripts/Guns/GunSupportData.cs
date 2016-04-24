@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -22,8 +21,10 @@ public class GunSupportData : ScriptableObject {
 		value *= 1.0f + percent / 100.0f;
 	}
 
-	[MenuItem("Assets/Create/Data/GunSupportData")]
+#if UNITY_EDITOR
+	[UnityEditor.MenuItem("Assets/Create/Data/GunSupportData")]
 	public static void CreateSupportData() {
 		ScriptableObjectUtil.CreateAsset<GunSupportData>();
 	}
+#endif
 }
