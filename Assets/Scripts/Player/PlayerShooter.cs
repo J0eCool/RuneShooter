@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class PlayerShooter : JComponent, HasQuantity {
 	[SerializeField] private LimitedQuantity mana;
 	[SerializeField] private Gun gun;
+	[SerializeField] private GameObject reticle;
 
 	private Transform target;
 
@@ -14,8 +15,18 @@ public class PlayerShooter : JComponent, HasQuantity {
 
 	protected override void OnUpdate() {
 		mana.OnUpdate(Time.deltaTime);
-
 		gun.OnUpdate(target, transform.position, mana);
+		updateReticle();
+	}
+
+	private void updateReticle() {
+		if (reticle) {
+			bool hasTarget = target != null;
+			reticle.SetActive(hasTarget);
+			if (hasTarget) {
+				reticle.transform.position = target.position;
+			}
+		}
 	}
 
 	public LimitedQuantity GetQuantity() {
