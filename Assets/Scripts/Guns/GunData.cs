@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class GunData : ScriptableObject {
 	public GameObject bulletPrefab = null;
+	public Sprite icon;
 	public ShotData shotData;
 
 #if UNITY_EDITOR

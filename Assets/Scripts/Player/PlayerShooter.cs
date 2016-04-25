@@ -4,10 +4,14 @@ using System.Collections.Generic;
 
 public class PlayerShooter : JComponent, HasQuantity {
 	[SerializeField] private LimitedQuantity mana;
-	[SerializeField] private Gun gun;
+	[SerializeField] private Gun[] guns;
 	[SerializeField] private GameObject reticle;
 
+	private int selectedGunIndex = 0;
 	private Transform target;
+
+	public Gun[] Guns { get { return guns; } }
+	public int SelectedGunIndex { get { return selectedGunIndex; } }
 
 	protected override void OnStart() {
 		mana.OnStart();
@@ -15,7 +19,8 @@ public class PlayerShooter : JComponent, HasQuantity {
 
 	protected override void OnUpdate() {
 		mana.OnUpdate(Time.deltaTime);
-		gun.OnUpdate(target, transform.position, mana);
+		Gun selectedGun = guns[selectedGunIndex];
+		selectedGun.OnUpdate(target, transform.position, mana);
 		updateReticle();
 	}
 
@@ -35,5 +40,11 @@ public class PlayerShooter : JComponent, HasQuantity {
 
 	public void SetTarget(Transform target) {
 		this.target = target;
+	}
+
+	public void SetSelectedGunIndex(int index) {
+		if (index >= 0 && index < guns.Length) {
+			selectedGunIndex = index;
+		}
 	}
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 [System.Serializable]
 public class Gun {
-	public GunData gunData = null;
+	public GunData data = null;
 	public List<GunSupportData> supports = new List<GunSupportData>();
 
 	private float shotTimer = 0.0f;
@@ -29,7 +29,7 @@ public class Gun {
 	}
 
 	private ShotData getShotData() {
-		ShotData shot = gunData.shotData.Copy();
+		ShotData shot = data.shotData.Copy();
 		foreach (GunSupportData support in supports) {
 			support.Modify(shot);
 		}
@@ -59,7 +59,7 @@ public class Gun {
 			float angle = aimAngle + cyclicAngle + randomAngle + multiBulletAngle;
 			Vector3 dir = VectorUtil.Unit(angle * Mathf.Deg2Rad);
 
-			GameObject bulletObject = GameObject.Instantiate(gunData.bulletPrefab);
+			GameObject bulletObject = GameObject.Instantiate(data.bulletPrefab);
 			Bullet bullet = bulletObject.GetComponent<Bullet>();
 			bullet.Init(shot, pos, dir);
 		}
