@@ -38,7 +38,7 @@ public class PlayerMovement : JComponent {
 
 	private void handleClicks() {
 		bool didClick = Input.GetButtonDown("Click");
-		bool clickHeld = Input.GetButton("Click");
+		bool clickHeld = Input.GetButton("Click") && Input.touchCount < 2;
 		Vector3 mousePos = MouseManager.Instance.WorldPos;
 		if (!clickHeld) {
 			wasLastClickHandled = false;
