@@ -132,8 +132,16 @@ public class MapGenerator : JComponent {
 					GameObject wall = Instantiate(wallPrefab);
 					wall.transform.position = positionForRoom(i, j + 0.5f);
 					wall.transform.parent = wallFolder;
+
 					RandomlySizedDoor door = wall.GetComponent<RandomlySizedDoor>();
 					door.Init(totalWallSize: roomWidth, isVertical: false, isDoor: wallHasDoor);
+
+					if (cur != null) {
+						cur.associatedWalls.Add(wall);
+					}
+					if (next != null) {
+						next.associatedWalls.Add(wall);
+					}
 				}
 			}
 		}
@@ -155,8 +163,16 @@ public class MapGenerator : JComponent {
 					GameObject wall = Instantiate(wallPrefab);
 					wall.transform.position = positionForRoom(i + 0.5f, j);
 					wall.transform.parent = wallFolder;
+
 					RandomlySizedDoor door = wall.GetComponent<RandomlySizedDoor>();
 					door.Init(totalWallSize: roomHeight, isVertical: true, isDoor: wallHasDoor);
+
+					if (cur != null) {
+						cur.associatedWalls.Add(wall);
+					}
+					if (next != null) {
+						next.associatedWalls.Add(wall);
+					}
 				}
 			}
 		}
