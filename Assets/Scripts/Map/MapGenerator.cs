@@ -64,6 +64,10 @@ public class MapGenerator : JComponent {
 				} else {
 					prev.doorToNorth = true;
 				}
+				int curX = Mathf.Max(x, x + dx);
+				int curY = Mathf.Max(y, y + dy);
+				Room cur = rooms[curX, curY];
+				prev.AddNeighbor(cur);
 			}
 
 			// Perform move

@@ -11,7 +11,7 @@ public class RoomVisibility : RoomAwareComponent, RoomChangeResponder {
 	}
 
 	public void DidSetActiveRoom(Room activeRoom) {
-		if (!hasBeenSeen && activeRoom == room) {
+		if (!hasBeenSeen && (activeRoom == room || activeRoom.neighbors.Contains(room))) {
 			setVisible(true);
 		}
 	}

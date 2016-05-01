@@ -9,20 +9,20 @@ public interface RoomChangeResponder {
 public class RoomManager : SingletonComponent<RoomManager> {
 	public Room ActiveRoom { get; private set; }
 
-	private List<RoomChangeResponder> registeredResponders = new List<RoomChangeResponder>();
+	private List<RoomChangeResponder> changeResponders = new List<RoomChangeResponder>();
 
 	public void Subscribe(RoomChangeResponder responder) {
-		registeredResponders.Add(responder);
+		changeResponders.Add(responder);
 	}
 
 	public void Unsubscribe(RoomChangeResponder responder) {
-		registeredResponders.Remove(responder);
+		changeResponders.Remove(responder);
 	}
 
 	public void SetActiveRoom(Room room) {
 		ActiveRoom = room;
 
-		foreach (RoomChangeResponder responder in registeredResponders) {
+		foreach (RoomChangeResponder responder in changeResponders) {
 			responder.DidSetActiveRoom(ActiveRoom);
 		}
 	}
