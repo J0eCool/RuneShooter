@@ -115,26 +115,46 @@ public class MapGenerator : JComponent {
 	private void spawnWalls() {
 		Transform wallFolder = new GameObject("Walls").transform;
 		wallFolder.parent = transform;
-		for (int i = 0; i < width; ++i) {
+
+		generateWalls(wallFolder,
+			nextRoom: (i, j) => inBounds(i, j + 1) ? rooms[i, j + 1] : null,
+			roomHasDoor: room => room.doorToNorth,
+			wallPosition: (i, j) => positionForRoom(i, j + 0.5f),
+			wallInit: (door, hasDoor) =>
+				door.Init(totalWallSize: roomWidth, isVertical: false, isDoor: hasDoor));
+		generateWalls(wallFolder,
+			nextRoom: (i, j) => inBounds(i + 1, j) ? rooms[i + 1, j] : null,
+			roomHasDoor: room => room.doorToEast,
+			wallPosition: (i, j) => positionForRoom(i + 0.5f, j),
+			wallInit: (door, hasDoor) =>
+				door.Init(totalWallSize: roomHeight, isVertical: true, isDoor: hasDoor));
+	}
+
+	delegate Room RoomByIndex(int i, int j);
+	delegate bool RoomProperty(Room room);
+	delegate Vector3 PositionByIndex(int i, int j);
+	delegate void WallInitializer(RandomlySizedDoor door, bool hasDoor);
+
+	private void generateWalls(
+			Transform wallFolder,
+			RoomByIndex nextRoom,
+			RoomProperty roomHasDoor,
+			PositionByIndex wallPosition,
+			WallInitializer wallInit) {
+		for (int i = -1; i < width; ++i) {
 			for (int j = -1; j < height; ++j) {
-				Room cur = null;
-				Room next = null;
-				if (j >= 0) {
-					cur = rooms[i, j];
-				}
-				if (j + 1 < height) {
-					next = rooms[i, j + 1];
-				}
+				Room cur = inBounds(i, j) ? rooms[i, j] : null;
+				Room next = nextRoom(i, j);
 
 				bool shouldSpawnWall = (cur != null) || (next != null);
 				if (shouldSpawnWall) {
-					bool wallHasDoor = (cur != null) && cur.doorToNorth;
+					bool wallHasDoor = (cur != null) && roomHasDoor(cur);
 					GameObject wall = Instantiate(wallPrefab);
-					wall.transform.position = positionForRoom(i, j + 0.5f);
+					wall.transform.position = wallPosition(i, j);
 					wall.transform.parent = wallFolder;
 
 					RandomlySizedDoor door = wall.GetComponent<RandomlySizedDoor>();
-					door.Init(totalWallSize: roomWidth, isVertical: false, isDoor: wallHasDoor);
+					wallInit(door, wallHasDoor);
 
 					if (cur != null) {
 						cur.associatedWalls.Add(wall);
@@ -145,37 +165,10 @@ public class MapGenerator : JComponent {
 				}
 			}
 		}
+	}
 
-		for (int j = 0; j < height; ++j) {
-			for (int i = -1; i < width; ++i) {
-				Room cur = null;
-				Room next = null;
-				if (i >= 0) {
-					cur = rooms[i, j];
-				}
-				if (i + 1 < width) {
-					next = rooms[i + 1, j];
-				}
-
-				bool shouldSpawnWall = (cur != null) || (next != null);
-				if (shouldSpawnWall) {
-					bool wallHasDoor = (cur != null) && cur.doorToEast;
-					GameObject wall = Instantiate(wallPrefab);
-					wall.transform.position = positionForRoom(i + 0.5f, j);
-					wall.transform.parent = wallFolder;
-
-					RandomlySizedDoor door = wall.GetComponent<RandomlySizedDoor>();
-					door.Init(totalWallSize: roomHeight, isVertical: true, isDoor: wallHasDoor);
-
-					if (cur != null) {
-						cur.associatedWalls.Add(wall);
-					}
-					if (next != null) {
-						next.associatedWalls.Add(wall);
-					}
-				}
-			}
-		}
+	private bool inBounds(int i, int j) {
+		return i >= 0 && i < width && j >= 0 && j < height;
 	}
 
 	private Vector3 positionForRoom(float i, float j) {
