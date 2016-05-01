@@ -2,14 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class EnemySpawnPoint : RoomAwareComponent, RoomChangeResponder {
+public class EnemySpawnPoint : JComponent {
 	[SerializeField] private GameObject enemyPrefab;
 
-	private bool didSpawn = false;
 	private GameObject spawnedEnemy = null;
 
 	protected override void OnStart() {
-		RoomManager.Instance.Subscribe(this);
+		spawnEnemy();
 	}
 
 	void OnDrawGizmos() {
@@ -17,25 +16,9 @@ public class EnemySpawnPoint : RoomAwareComponent, RoomChangeResponder {
 		Gizmos.DrawWireSphere(transform.position, 0.4f);
 	}
 
-	public void DidSetActiveRoom(Room activeRoom) {
-		bool movedToCurrentRoom = activeRoom == room;
-		if (movedToCurrentRoom && !didSpawn) {
-			spawnEnemy();
-		} else if (!movedToCurrentRoom && didSpawn && spawnedEnemy != null) {
-			/* If spawned enemy was destroyed by anything else (e.g. it died),
-			 * intentionally don't respawn it */
-			despawnEnemy();
-		}
-	}
-
 	private void spawnEnemy() {
 		spawnedEnemy = Instantiate(enemyPrefab);
+		spawnedEnemy.transform.parent = transform.parent;
 		spawnedEnemy.transform.position = transform.position;
-		didSpawn = true;
-	}
-
-	private void despawnEnemy() {
-		Remove(spawnedEnemy);
-		didSpawn = false;
 	}
 }

@@ -20,10 +20,12 @@ public class RoomManager : SingletonComponent<RoomManager> {
 	}
 
 	public void SetActiveRoom(Room room) {
-		ActiveRoom = room;
+		if (ActiveRoom != room) {
+			ActiveRoom = room;
 
-		foreach (RoomChangeResponder responder in changeResponders) {
-			responder.DidSetActiveRoom(ActiveRoom);
+			foreach (RoomChangeResponder responder in changeResponders) {
+				responder.DidSetActiveRoom(ActiveRoom);
+			}
 		}
 	}
 }

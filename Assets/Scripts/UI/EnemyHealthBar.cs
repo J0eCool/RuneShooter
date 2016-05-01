@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class EnemyHealthBar : QuantityBar {
 	private Renderer[] renderers;
-	private bool isVisible = true;
 
 	protected override void OnStart() {
 		base.OnStart();
@@ -20,11 +19,8 @@ public class EnemyHealthBar : QuantityBar {
 	}
 
 	private void setVisible(bool visible) {
-		if (isVisible != visible) {
-			isVisible = visible;
-			foreach (var r in renderers) {
-				r.enabled = visible;
-			}
+		foreach (var r in renderers) {
+			r.enabled = visible;
 		}
 	}
 }
