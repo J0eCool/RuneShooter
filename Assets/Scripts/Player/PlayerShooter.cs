@@ -18,10 +18,26 @@ public class PlayerShooter : JComponent, HasQuantity {
 	}
 
 	protected override void OnUpdate() {
+		updateSlotInput();
 		mana.OnUpdate(Time.deltaTime);
 		Gun selectedGun = guns[selectedGunIndex];
-		selectedGun.OnUpdate(target, transform.position, mana);
+		bool shouldShoot = target != null;
+		Vector3 targetPos = target != null ? target.position : Vector3.zero;
+		if (Input.GetButton("Fire")) {
+			shouldShoot = true;
+			targetPos = MouseManager.Instance.WorldPos;
+		}
+		selectedGun.OnUpdate(shouldShoot, targetPos, transform.position, mana);
 		updateReticle();
+	}
+
+	static readonly string[] slotInputs = { "Slot1", "Slot2", "Slot3" };
+	private void updateSlotInput() {
+		for (int i = 0; i < slotInputs.Length; ++i) {
+			if (Input.GetButtonDown(slotInputs[i])) {
+				SetSelectedGunIndex(i);
+			}
+		}
 	}
 
 	private void updateReticle() {
@@ -29,7 +45,11 @@ public class PlayerShooter : JComponent, HasQuantity {
 			bool hasTarget = target != null;
 			reticle.SetActive(hasTarget);
 			if (hasTarget) {
-				reticle.transform.position = target.position;
+				Vector3 rPos = reticle.transform.position;
+				Vector3 tPos = target.position;
+				rPos.x = tPos.x;
+				rPos.y = tPos.y;
+				reticle.transform.position = rPos;
 			}
 		}
 	}
