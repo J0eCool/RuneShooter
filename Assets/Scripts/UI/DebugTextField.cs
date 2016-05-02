@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class DebugTextField : SingletonComponent<DebugTextField> {
 	[StartComponent] private Text text;
 
-	protected override void OnUpdate() {
+	protected override void OnUpdate(float dT) {
 		text.text = "";
 	}
 

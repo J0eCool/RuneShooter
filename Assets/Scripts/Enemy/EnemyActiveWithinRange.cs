@@ -15,7 +15,7 @@ public class EnemyActiveWithinRange : JComponent {
 		player = PlayerManager.Instance.Player.transform;
 	}
 
-	protected override void OnUpdate() {
+	protected override void OnUpdate(float dT) {
 		Vector3 playerPos = player.position;
 		Vector3 delta = transform.position - playerPos;
 		bool inRange = delta.sqrMagnitude < range * range;

@@ -20,8 +20,8 @@ public class Bullet : JComponent {
 		_speed *= shot.projectileSpeed;
 	}
 
-	protected override void OnFixedUpdate() {
-		float dist = _speed * Time.fixedDeltaTime;
+	protected override void OnFixedUpdate(float dT) {
+		float dist = _speed * dT;
 		transform.position += _dir * dist;
 		_distTraveled += dist;
 

@@ -49,4 +49,11 @@ public static class VectorUtil {
 		vec.z = z;
 		return vec;
 	}
+
+	public static void Set2DPos(Transform toSet, Vector3 val) {
+		Vector3 pos = toSet.position;
+		pos.x = val.x;
+		pos.y = val.y;
+		toSet.position = pos;
+	}
 }

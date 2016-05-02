@@ -19,11 +19,11 @@ public class PlayerMovement : JComponent {
 		moveTarget = transform.position;
 	}
 
-	protected override void OnUpdate() {
+	protected override void OnUpdate(float dT) {
 		handleClicks();
 	}
 
-	protected override void OnFixedUpdate() {
+	protected override void OnFixedUpdate(float dT) {
 		Vector3 delta = moveTarget - transform.position;
 		delta.z = 0.0f;
 		Vector3 dir = delta.normalized;

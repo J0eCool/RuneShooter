@@ -14,8 +14,8 @@ public class CameraZoom : JComponent {
 		cameras = GetComponentsInChildren<Camera>();
 	}
 
-	protected override void OnUpdate() {
-		float scroll = scrollWheelZoom();
+	protected override void OnUpdate(float dT) {
+		float scroll = scrollWheelZoom(dT);
 		float pinch = touchPinchZoom();
 		float zoom = MathUtil.AbsMax(scroll, pinch);
 		applyDeltaZoom(zoom);
@@ -32,8 +32,8 @@ public class CameraZoom : JComponent {
 		}
 	}
 
-	private float scrollWheelZoom() {
-		return Input.GetAxis("Mouse ScrollWheel") * scrollZoomSpeed * Time.deltaTime;
+	private float scrollWheelZoom(float dT) {
+		return Input.GetAxis("Mouse ScrollWheel") * scrollZoomSpeed * dT;
 	}
 
 	private float touchPinchZoom() {

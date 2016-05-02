@@ -21,7 +21,7 @@ public class QuantityBar : JComponent {
 		baseText = text ? text.text : null;
 	}
 
-	protected override void OnUpdate() {
+	protected override void OnUpdate(float dT) {
 		if (quantity == null) {
 			return;
 		}

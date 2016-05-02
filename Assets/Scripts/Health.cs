@@ -28,17 +28,17 @@ public class Health : JComponent, HasQuantity {
 		baseMaterial = renderer.material;
 	}
 
-	protected override void OnUpdate() {
+	protected override void OnUpdate(float dT) {
 		if (health.Current <= 0) {
 			Remove();
 			return;
 		}
 
-		health.OnUpdate(Time.deltaTime);
+		health.OnUpdate(dT);
 
 		if (damageTimer > 0.0f) {
-			damageTimer -= Time.deltaTime;
-			flashTimer -= Time.deltaTime;
+			damageTimer -= dT;
+			flashTimer -= dT;
 			if (damageTimer <= 0.0f) {
 				stopFlashing();
 			} else if (flashTimer <= 0.0f) {

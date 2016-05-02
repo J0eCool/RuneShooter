@@ -7,12 +7,12 @@ public class CameraFollow : JComponent {
 	[SerializeField] private float correctionCoefficient = 5.0f;
 	[SerializeField] private float mouseLookCoefficient = 0.35f;
 
-	protected override void OnFixedUpdate() {
+	protected override void OnFixedUpdate(float dT) {
 		Vector2 pos2d = transform.position;
 		Vector2 mouseDelta = (MouseManager.Instance.WorldPos - pos2d) * mouseLookCoefficient;
 		Vector2 targetPos = new Vector2(target.position.x, target.position.y) + mouseDelta;
 		Vector2 delta = targetPos - pos2d;
-		Vector2 toMove = delta * Time.fixedDeltaTime * correctionCoefficient;
+		Vector2 toMove = delta * dT * correctionCoefficient;
 		if (toMove.sqrMagnitude >= delta.sqrMagnitude || correctionCoefficient <= 0.0f) {
 			transform.position = new Vector3(targetPos.x, targetPos.y, transform.position.z);
 		} else {

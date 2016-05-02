@@ -3,7 +3,7 @@ using System;
 using System.Reflection;
 
 public class JComponent : MonoBehaviour {
-	private PauseManager _pauseManager;
+	private PauseManager pauseManager;
 
 	protected virtual void OnRemove() { }
 	protected void Remove() {
@@ -25,23 +25,23 @@ public class JComponent : MonoBehaviour {
 
 	protected virtual void OnStart() { }
 	void Start() {
-		_pauseManager = PauseManager.Instance;
+		pauseManager = PauseManager.Instance;
 		setupStartComponents();
 		OnStart();
 	}
 
 	protected virtual bool CanBePaused { get { return true; } }
-	protected virtual void OnUpdate() { }
+	protected virtual void OnUpdate(float dT) { }
 	void Update() {
-		if (!(CanBePaused && _pauseManager.IsPaused)) {
-			OnUpdate();
+		if (!(CanBePaused && pauseManager.IsPaused)) {
+			OnUpdate(Time.deltaTime);
 		}
 	}
 
-	protected virtual void OnFixedUpdate() { }
+	protected virtual void OnFixedUpdate(float dT) { }
 	void FixedUpdate() {
 		// Don't need to check if game is paused; FixedUpdate doesn't get called if Time.timeScale is 0
-		OnFixedUpdate();
+		OnFixedUpdate(Time.fixedDeltaTime);
 	}
 
 	private void setupStartComponents() {

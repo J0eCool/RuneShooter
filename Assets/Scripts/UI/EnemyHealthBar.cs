@@ -12,8 +12,8 @@ public class EnemyHealthBar : QuantityBar {
 		setVisible(false);
 	}
 
-	protected override void OnUpdate() {
-		base.OnUpdate();
+	protected override void OnUpdate(float dT) {
+		base.OnUpdate(dT);
 
 		setVisible(quantity.Current < quantity.Max);
 	}

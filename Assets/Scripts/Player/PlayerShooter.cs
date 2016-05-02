@@ -17,9 +17,9 @@ public class PlayerShooter : JComponent, HasQuantity {
 		mana.OnStart();
 	}
 
-	protected override void OnUpdate() {
+	protected override void OnUpdate(float dT) {
 		updateSlotInput();
-		mana.OnUpdate(Time.deltaTime);
+		mana.OnUpdate(dT);
 		Gun selectedGun = guns[selectedGunIndex];
 		bool shouldShoot = target != null;
 		Vector3 targetPos = target != null ? target.position : Vector3.zero;
@@ -27,7 +27,7 @@ public class PlayerShooter : JComponent, HasQuantity {
 			shouldShoot = true;
 			targetPos = MouseManager.Instance.WorldPos;
 		}
-		selectedGun.OnUpdate(shouldShoot, targetPos, transform.position, mana);
+		selectedGun.OnUpdate(dT, shouldShoot, targetPos, transform.position, mana);
 		updateReticle();
 	}
 
@@ -45,11 +45,7 @@ public class PlayerShooter : JComponent, HasQuantity {
 			bool hasTarget = target != null;
 			reticle.SetActive(hasTarget);
 			if (hasTarget) {
-				Vector3 rPos = reticle.transform.position;
-				Vector3 tPos = target.position;
-				rPos.x = tPos.x;
-				rPos.y = tPos.y;
-				reticle.transform.position = rPos;
+				VectorUtil.Set2DPos(reticle.transform, target.position);
 			}
 		}
 	}

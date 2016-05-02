@@ -10,7 +10,7 @@ public class Gun {
 	private float shotTimer = 0.0f;
 	private float shotNumPartial = 0.0f;
 
-	public void OnUpdate(bool shouldShoot, Vector3 targetPos, Vector3 position, LimitedQuantity mana) {
+	public void OnUpdate(float dT, bool shouldShoot, Vector3 targetPos, Vector3 position, LimitedQuantity mana) {
 		if (shotTimer <= 0.0f && shouldShoot) {
 			int manaCost = (int)getShotData().manaCost;
 			if (mana.Current >= manaCost) {
@@ -18,11 +18,11 @@ public class Gun {
 				shoot(targetPos, position);
 			}
 		}
-		updateShotTimer();
+		updateShotTimer(dT);
 	}
 
-	private void updateShotTimer() {
-		shotTimer -= Time.deltaTime;
+	private void updateShotTimer(float dT) {
+		shotTimer -= dT;
 		if (shotTimer < 0.0f) {
 			shotTimer = 0.0f;
 		}

@@ -13,7 +13,7 @@ public class EnemyMoveTowardPlayer : EnemyMovement {
 		player = PlayerManager.Instance.Player.transform;
 	}
 
-	protected override void OnFixedUpdate() {
+	protected override void OnFixedUpdate(float dT) {
 		Vector2 delta = player.position - transform.position;
 		Vector2 vel = Vector2.zero;
 		if (delta.sqrMagnitude > range * range) {

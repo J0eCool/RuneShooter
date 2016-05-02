@@ -17,7 +17,7 @@ public class GunSelectButton : JComponent {
 		unselectedColor = background.color;
 	}
 
-	protected override void OnUpdate() {
+	protected override void OnUpdate(float dT) {
 		if (gunIndex >= 0 && gunIndex < shooter.Guns.Length) {
 			Gun gun = shooter.Guns[gunIndex];
 			image.sprite = gun.data.icon;
