@@ -2,27 +2,28 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class PlayerShooter : JComponent, HasQuantity {
+public class PlayerShooter : JComponent, HasQuantity, MouseClickResponder {
 	[SerializeField] private LimitedQuantity mana;
 	[SerializeField] private Gun[] guns;
 	[SerializeField] private GameObject reticle;
 
 	private int selectedGunIndex = 0;
-	private Transform target;
+	public Transform Target { get; private set; }
 
 	public Gun[] Guns { get { return guns; } }
 	public int SelectedGunIndex { get { return selectedGunIndex; } }
 
 	protected override void OnStart() {
 		mana.OnStart();
+		MouseManager.Instance.Subscribe(this);
 	}
 
 	protected override void OnUpdate(float dT) {
 		updateSlotInput();
 		mana.OnUpdate(dT);
 		Gun selectedGun = guns[selectedGunIndex];
-		bool shouldShoot = target != null;
-		Vector3 targetPos = target != null ? target.position : Vector3.zero;
+		bool shouldShoot = Target != null;
+		Vector3 targetPos = Target != null ? Target.position : Vector3.zero;
 		if (Input.GetButton("Fire")) {
 			shouldShoot = true;
 			targetPos = MouseManager.Instance.WorldPos;
@@ -42,10 +43,10 @@ public class PlayerShooter : JComponent, HasQuantity {
 
 	private void updateReticle() {
 		if (reticle) {
-			bool hasTarget = target != null;
+			bool hasTarget = Target != null;
 			reticle.SetActive(hasTarget);
 			if (hasTarget) {
-				VectorUtil.Set2DPos(reticle.transform, target.position);
+				VectorUtil.Set2DPos(reticle.transform, Target.position);
 			}
 		}
 	}
@@ -54,13 +55,26 @@ public class PlayerShooter : JComponent, HasQuantity {
 		return mana;
 	}
 
-	public void SetTarget(Transform target) {
-		this.target = target;
-	}
-
 	public void SetSelectedGunIndex(int index) {
 		if (index >= 0 && index < guns.Length) {
 			selectedGunIndex = index;
 		}
+	}
+
+	public void DidMouseClick(MouseClick click, ref bool wasClickConsumed) {
+		int enemyLayer = LayerMask.NameToLayer("Enemy");
+		foreach (var hit in click.hits) {
+			if (hit.collider.gameObject.layer == enemyLayer) {
+				Target = hit.transform;
+				wasClickConsumed = true;
+			}
+		}
+	}
+
+	public void DidMouseHeld(MouseClick click) {
+	}
+
+	public float MouseClickPriority() {
+		return -10.0f;
 	}
 }
